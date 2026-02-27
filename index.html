@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aalpha Speed - Master Your Typing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <div class="logo" onclick="app.showDashboard()">Aalpha Speed</div>
+        
+        <div class="lang-switch" id="lang-switch-container" style="display: none;">
+            <button id="lang-en" class="lang-btn active" onclick="app.setLanguage('en')">English</button>
+            <button id="lang-hi" class="lang-btn" onclick="app.setLanguage('hi')">Hindi (Kruti Dev)</button>
+        </div>
+
+        <div class="nav-actions">
+            <span class="user-name-display" id="nav-user-name"></span>
+            <button class="nav-btn" id="nav-dashboard-btn" style="display:none;" onclick="app.showDashboard()">Dashboard</button>
+            <button class="theme-btn" onclick="app.toggleTheme()">🌓</button>
+        </div>
+    </nav>
+
+    <main id="app-container">
+        <section id="login-view" class="view glass active">
+            <h2>Welcome to Aalpha Speed</h2>
+            <form id="login-form">
+                <div class="input-group">
+                    <label>First Name</label>
+                    <input type="text" id="fname" required placeholder="Enter">
+                </div>
+                <div class="input-group">
+                    <label>Last Name</label>
+                    <input type="text" id="lname" required placeholder="Enter">
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Start Learning 🚀</button>
+            </form>
+        </section>
+
+        <section id="dashboard-view" class="view">
+            <div class="dashboard-stats glass" style="margin-bottom: 2rem; padding: 1.5rem; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1rem;">
+                <div style="text-align: center;">
+                    <h3 style="color: var(--text-muted); font-size: 0.9rem;">Best English WPM</h3>
+                    <p id="dash-en-wpm" style="font-size: 1.8rem; font-weight: 700; color: var(--primary);">0</p>
+                </div>
+                <div style="text-align: center;">
+                    <h3 style="color: var(--text-muted); font-size: 0.9rem;">Best Hindi WPM</h3>
+                    <p id="dash-hi-wpm" style="font-size: 1.8rem; font-weight: 700; color: #f59e0b;">0</p>
+                </div>
+            </div>
+
+            <h2 style="margin-bottom: 1rem;">Course Structure <span style="font-size: 1rem; font-weight: normal; color: var(--text-muted);">(All Unlocked!)</span></h2>
+            <div class="lessons-grid" id="lessons-grid"></div>
+        </section>
+
+        <section id="typing-view" class="view">
+            <div class="typing-header">
+                <div>
+                    <h2 id="current-lesson-title">Lesson 1</h2>
+                    <p id="current-lesson-desc" style="color: var(--text-muted); font-size: 0.9rem;"></p>
+                </div>
+                
+                <div class="timer-select-group">
+                    <label style="font-size: 0.9rem; margin-right: 0.5rem;">Timer:</label>
+                    <select id="timer-select" onchange="app.handleTimerSelection()">
+                        <option value="30">30 sec</option>
+                        <option value="60" selected>60 sec</option>
+                        <option value="90">90 sec</option>
+                        <option value="120">120 sec</option>
+                        <option value="custom">Custom...</option>
+                        <option value="0">No Timer (End on finish)</option>
+                    </select>
+                    <input type="number" id="custom-timer" placeholder="Mins" style="display:none; width: 70px; margin-left: 0.5rem;" min="1" step="0.5">
+                </div>
+
+                <div class="live-stats">
+                    <div style="color: var(--primary);">Time: <span id="live-time">1:00</span></div>
+                    <div style="color: var(--correct);">WPM: <span id="live-wpm">0</span></div>
+                </div>
+            </div>
+
+            <div class="typing-area-container glass" id="scroll-container" onclick="document.getElementById('hidden-input').focus()">
+                <div id="typing-text"></div>
+                <input type="text" id="hidden-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            </div>
+            
+            <div style="margin-top: 1.5rem; text-align: center;">
+                <button class="btn" onclick="app.resetLesson()" style="background: var(--text-muted);">Restart Lesson</button>
+            </div>
+        </section>
+
+        <section id="result-view" class="view glass">
+            <div class="result-header">
+                <h2 class="result-greeting" id="result-greeting">Great Job!</h2>
+                <div id="rating-badge" class="rating-badge glow-pulse">Excellent 🔥</div>
+                <p id="performance-title" class="rank-title">Rank: Beginner</p>
+            </div>
+
+            <div class="main-stats-container">
+                <div class="stat-circle primary-glow">
+                    <span class="stat-label">Net Speed</span>
+                    <span class="stat-value" id="res-net-wpm">0</span>
+                    <span class="stat-unit">WPM</span>
+                </div>
+                <div class="stat-circle secondary-glow">
+                    <span class="stat-label">Accuracy</span>
+                    <span class="stat-value" id="res-acc">0%</span>
+                    <span class="stat-unit">Spot On</span>
+                </div>
+            </div>
+
+            <div class="glass-panel">
+                <div class="mini-stat">
+                    <span>Gross Speed</span>
+                    <strong id="res-gross-wpm">0 WPM</strong>
+                </div>
+                <div class="mini-stat">
+                    <span>Correct Chars</span>
+                    <strong id="res-correct-chars" style="color: var(--correct);">0</strong>
+                </div>
+                <div class="mini-stat">
+                    <span>Mistakes</span>
+                    <strong id="res-mistakes" style="color: var(--wrong);">0</strong>
+                </div>
+                <div class="mini-stat">
+                    <span>Time Taken</span>
+                    <strong id="res-time">0s</strong>
+                </div>
+            </div>
+
+            <div class="result-actions">
+                <button class="btn btn-secondary" onclick="app.resetLesson()">🔄 Try Again</button>
+                <button class="btn glow-btn" id="next-lesson-btn" onclick="app.nextLesson()">Next Lesson ➡️</button>
+                <button class="btn btn-dark" onclick="app.showDashboard()">🏠 Dashboard</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        © 2026 Aalpha Speed – Master Your Typing – Ajit Prajapati
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
