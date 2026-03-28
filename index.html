@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aalpha Speed - Master Your Typing</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo" onclick="app.showDashboard()">Aalpha Speed</div>
+        <div class="nav-actions">
+            <span class="user-name-display" id="nav-user-name"></span>
+            <button class="nav-btn" id="nav-dashboard-btn" style="display:none;"
+                onclick="app.showDashboard()">Dashboard</button>
+            <button class="theme-btn" onclick="app.toggleTheme()">🌓</button>
+        </div>
+    </nav>
+
+    <main id="app-container">
+        <section id="login-view" class="view glass active">
+            <h2>Welcome to Aalpha Speed</h2>
+            <form id="login-form">
+                <div class="input-group">
+                    <label>First Name</label>
+                    <input type="text" id="fname" required placeholder="e.g. Ajit">
+                </div>
+                <div class="input-group">
+                    <label>Last Name</label>
+                    <input type="text" id="lname" required placeholder="e.g. Prajapati">
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Start Learning 🚀</button>
+            </form>
+        </section>
+
+        <section id="dashboard-view" class="view">
+            <h2 style="margin-bottom: 1rem;">Course Structure <span
+                    style="font-size: 1rem; font-weight: normal; color: var(--text-muted);">(All Unlocked!)</span></h2>
+            <div class="lessons-grid" id="lessons-grid"></div>
+            <div style="margin-bottom: 2rem; text-align: center;">
+                <button class="btn" style="background: #22c55e;"
+                    onclick="app.switchView('zombie-view'); zombieGame.init();">
+                    🧟‍♂️ Play Zombie Survival Mode
+                </button>
+            </div>
+        </section>
+
+        <section id="zombie-view" class="view">
+            <div class="typing-header"
+                style="flex-direction: row; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2>Zombie Survival</h2>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Type the words to defend your base!</p>
+                </div>
+                <div class="live-stats">
+                    <div style="color: var(--wrong);">❤️ <span id="z-health">3</span></div>
+                    <div style="color: var(--correct);">🎯 <span id="z-score">0</span></div>
+                    <div style="color: var(--primary);">⚡ <span id="z-wpm">0</span> WPM</div>
+                </div>
+                <button class="btn" style="background: var(--text-muted); width: auto;"
+                    onclick="zombieGame.stop(); app.showDashboard()">Quit</button>
+            </div>
+
+            <div id="zombie-game-area" onclick="document.getElementById('hidden-input').focus()">
+                <div id="player-base">🛡️ Base</div>
+                <div id="z-current-typing"></div>
+            </div>
+        </section>
+
+        <section id="typing-view" class="view">
+            <div class="typing-header">
+                <div>
+                    <h2 id="current-lesson-title">Lesson 1</h2>
+                    <p id="current-lesson-desc" style="color: var(--text-muted); font-size: 0.9rem;"></p>
+                </div>
+
+                <div class="timer-select-group">
+                    <label style="font-size: 0.9rem; margin-right: 0.5rem;">Timer:</label>
+                    <select id="timer-select" onchange="app.handleTimerSelection()">
+                        <option value="30">30 sec</option>
+                        <option value="60" selected>1 min (60s)</option>
+                        <option value="120">2 min</option>
+                        <option value="300">5 min</option>
+                        <option value="custom">Custom...</option>
+                        <option value="0">No Timer (∞)</option>
+                    </select>
+                    <input type="text" id="custom-timer" placeholder="e.g. 90 or 1.5m"
+                        style="display:none; width: 130px; margin-left: 0.5rem;">
+                </div>
+
+                <div class="live-stats">
+                    <div style="color: var(--primary);">Time: <span id="live-time">60</span>s</div>
+                    <div style="color: var(--correct);">WPM: <span id="live-wpm">0</span></div>
+                </div>
+            </div>
+
+            <div class="typing-area-container glass" id="scroll-container"
+                onclick="document.getElementById('hidden-input').focus()">
+                <div id="typing-text"></div>
+                <input type="text" id="hidden-input" autocomplete="off" autocorrect="off" autocapitalize="off"
+                    spellcheck="false">
+            </div>
+
+            <div style="margin-top: 1.5rem; text-align: center;">
+                <button class="btn" onclick="app.resetLesson()" style="background: var(--text-muted);">Restart
+                    Lesson</button>
+            </div>
+        </section>
+
+        <section id="result-view" class="view glass">
+            <h2 class="result-greeting" id="result-greeting">Great Job!</h2>
+            <div id="rating-badge" class="rating-badge">Excellent</div>
+
+            <div class="result-grid">
+                <div class="stat-card glass" style="box-shadow: none;">
+                    <h3>Net Speed (WPM)</h3>
+                    <p id="res-net-wpm">0</p>
+                </div>
+                <div class="stat-card glass" style="box-shadow: none;">
+                    <h3>Accuracy</h3>
+                    <p id="res-acc">0%</p>
+                </div>
+                <div class="stat-card glass" style="box-shadow: none;">
+                    <h3>Gross Speed</h3>
+                    <p id="res-gross-wpm">0</p>
+                </div>
+            </div>
+
+            <div class="result-detail glass">
+                <h3 style="margin-bottom: 1rem; text-align: center;">Detailed Breakdown</h3>
+                <p><span>Total Typed Characters:</span> <strong id="res-total-chars">0</strong></p>
+                <p><span>Correct Characters:</span> <strong id="res-correct-chars"
+                        style="color: var(--correct);">0</strong></p>
+                <p><span>Total Mistakes:</span> <strong id="res-mistakes" style="color: var(--wrong);">0</strong></p>
+                <p><span>Time Taken:</span> <strong id="res-time">0s</strong></p>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem;">
+                <button class="btn" style="background: var(--text-muted);" onclick="app.resetLesson()">Try
+                    Again</button>
+                <button class="btn" id="next-lesson-btn" onclick="app.nextLesson()">Next Lesson ➡️</button>
+                <button class="btn" style="background: #334155;" onclick="app.showDashboard()">🏠 Dashboard</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        © 2026 Aalpha Speed – Master Your Typing
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
